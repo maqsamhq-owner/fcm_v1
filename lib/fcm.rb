@@ -153,6 +153,11 @@ class FCM
     execute_notification(body)
   end
 
+  def send_with_notification_key_v1(notification_key, options = {})
+    body = { to: notification_key }.merge(options)
+    execute_notification_v1(body)
+  end
+
   def topic_subscription(topic, registration_id)
     for_uri(INSTANCE_ID_API) do |connection|
       response = connection.post("/iid/v1/#{registration_id}/rel/topics/#{topic}")
@@ -299,6 +304,15 @@ class FCM
   def execute_notification(body)
     for_uri(BASE_URI) do |connection|
       response = connection.post("/fcm/send", body.to_json)
+      build_response(response)
+    end
+  end
+
+  def execute_notification_v1(body)
+    for_uri(BASE_URI_V1) do |connection|
+      response = connection.post(
+        "#{@project_name}/messages:send", body.to_json
+      )
       build_response(response)
     end
   end

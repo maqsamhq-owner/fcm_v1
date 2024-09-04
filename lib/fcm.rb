@@ -215,6 +215,19 @@ class FCM
     end
   end
 
+  def send_to_topic_condition_v1(condition, options = {})
+    if validate_condition?(condition)
+      body = { message: { condition: condition }.merge(options) }
+
+      for_uri(BASE_URI_V1) do |connection|
+        response = connection.post(
+          "#{@project_name}/messages:send", body.to_json
+        )
+        build_response(response)
+      end
+    end
+  end
+
   private
 
   def for_uri(uri, extra_headers = {})

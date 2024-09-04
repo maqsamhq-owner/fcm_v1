@@ -154,8 +154,7 @@ class FCM
   end
 
   def send_with_notification_key_v1(notification_key, options = {})
-    body = { to: notification_key }.merge(options)
-    execute_notification_v1(body)
+    execute_notification_v1(options)
   end
 
   def topic_subscription(topic, registration_id)
